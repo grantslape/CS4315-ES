@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import SearchBar from './SearchBar'
 import './App.css';
 
 class App extends Component {
@@ -8,24 +9,12 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <form>
-            <label>
-              Search:
-              <input
-                type="text"
-                placeholder="Enter query" />
-            </label>
-            <input type="submit" value="Submit" />
-          </form>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          Grant's Fabulous Search Engine!<br />
+          Type your query...
         </header>
+        <body className="App-body">
+          <SearchBar />
+        </body>
       </div>
     );
   }
