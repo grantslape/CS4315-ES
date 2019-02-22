@@ -11,10 +11,11 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           Grant's Fabulous Search Engine!<br />
           Type your query...
-        </header>
-        <body className="App-body">
           <SearchBar />
-        </body>
+        </header>
+        <footer className="App-footer">
+          Copyright 2019 Grant H. Slape
+        </footer>
       </div>
     );
   }
