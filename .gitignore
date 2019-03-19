@@ -76,3 +76,5 @@ typings/
 .env.production.local
 .vscode/
 .idea/
+
+*.pyc

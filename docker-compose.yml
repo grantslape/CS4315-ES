@@ -27,7 +27,7 @@ services:
     image:
       flask-backend:latest
     volumes:
-      - './backend/usr/src/app'
+      - './backend:/usr/src/app'
     ports:
       - '45000:80'
 
