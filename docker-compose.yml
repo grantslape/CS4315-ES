@@ -14,9 +14,23 @@ services:
       - './frontend:/usr/src/app'
       - '/usr/src/app/node_modules'
     ports:
-      - '3000:3000'
+      - '43000:3000'
     environment:
       - NODE_ENV=development
+
+  # flask back end
+  backend:
+    container_name: flask-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image:
+      flask-backend:latest
+    volumes:
+      - './backend/usr/src/app'
+    ports:
+      - '45000:5000'
+
   
   # Elasticsearch container
   elasticsearch:
@@ -30,7 +44,7 @@ services:
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
       - discovery.type=single-node
     ports:
-      - '9300:9300'
-      - '9200:9200'
+      - '49300:9300'
+      - '49200:9200'
 volumes:
   esdata:
