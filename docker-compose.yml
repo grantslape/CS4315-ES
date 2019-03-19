@@ -29,7 +29,7 @@ services:
     volumes:
       - './backend/usr/src/app'
     ports:
-      - '45000:5000'
+      - '45000:80'
 
   
   # Elasticsearch container

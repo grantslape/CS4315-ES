@@ -12,6 +12,9 @@ WORKDIR /usr/src/app
 # Install dependencies
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
+# Open port 80
+EXPOSE 80
+
 # Copy the app into the container at /app
 ADD app /usr/src/app
 
