@@ -78,3 +78,5 @@ typings/
 .idea/
 
 *.pyc
+yelp_data/
+*.env

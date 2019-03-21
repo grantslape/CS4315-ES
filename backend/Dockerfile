@@ -20,4 +20,4 @@ ADD app /usr/src/app
 
 ENTRYPOINT [ "python" ]
 
-CMD ["app/src/app.py"]
+CMD ["src/app.py"]

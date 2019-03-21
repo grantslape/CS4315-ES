@@ -16,7 +16,7 @@ services:
     ports:
       - '43000:3000'
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV}
 
   # flask back end
   backend:
