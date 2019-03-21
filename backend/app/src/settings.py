@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 
-load_dotenv(dotenv_path='../.env')
+load_dotenv(verbose=True)
 
-ENVIRONMENT = os.getenv('ENVIRONMENT')
+ENVIRONMENT = os.getenv('PYTHON_ENV')
+print(ENVIRONMENT)
