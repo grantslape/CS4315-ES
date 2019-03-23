@@ -1,36 +1,6 @@
 version: '3.5'
 
 services:
-
-  # react front end
-  frontend:
-    container_name: search-frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image:
-      search-frontend:latest
-    volumes:
-      - './frontend:/usr/src/app'
-      - '/usr/src/app/node_modules'
-    ports:
-      - '43000:3000'
-    environment:
-      - NODE_ENV=${NODE_ENV}
-
-  # flask back end
-  backend:
-    container_name: flask-backend
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image:
-      flask-backend:latest
-    volumes:
-      - './backend:/usr/src/app'
-    ports:
-      - '45000:5000'
-
   # Elasticsearch container
   elasticsearch:
     container_name: elasticsearch
@@ -45,5 +15,14 @@ services:
     ports:
       - '49300:9300'
       - '49200:9200'
+    networks:
+      backend:
+        aliases:
+          - elasticsearch
 volumes:
   esdata:
+
+networks:
+  backend:
+    external:
+      name: backend_network

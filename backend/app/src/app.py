@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.register_blueprint(index, url_prefix='/index')
 
 
-@app.route('/heartbeat')
+@app.route('/')
 def heartbeat():
     return jsonify(time=str(datetime.now()), env=ENVIRONMENT)
 

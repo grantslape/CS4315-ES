@@ -1,0 +1,25 @@
+version: '3.5'
+
+services:
+
+  # flask back end
+  backend:
+    container_name: flask-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image:
+      flask-backend:latest
+    volumes:
+      - './backend:/usr/src/app'
+    ports:
+      - '45000:5000'
+    networks:
+      backend:
+        aliases:
+          - flask-backend
+
+networks:
+  backend:
+    external:
+      name: backend_network

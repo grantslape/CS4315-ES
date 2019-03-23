@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+
+  # react front end
+  frontend:
+    container_name: search-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image:
+      search-frontend:latest
+    volumes:
+      - '.:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '43000:3000'
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    networks:
+      backend:
+        aliases:
+          - search-frontend
+
+networks:
+  backend:
+    external:
+      name: backend_network
