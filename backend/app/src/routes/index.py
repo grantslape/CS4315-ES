@@ -8,5 +8,6 @@ index = Blueprint('index', __name__)
 
 @index.route('', methods=["POST"])
 def create_index():
-    response = requests.put('{0}/{1}'.format(ES_HOST, 'reviews'))
-    return response
+    # TODO now that this works, make it better
+    response = requests.put('http://{0}:9200/{1}?pretty'.format(ES_HOST, 'reviews'))
+    return str(response)

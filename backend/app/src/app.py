@@ -15,5 +15,5 @@ def heartbeat():
 
 
 if __name__ == "__main__":
-    debug = True if ENVIRONMENT == 'local' else False
-    app.run(host='0.0.0.0', port=45000, debug=debug)
+    debug = True if ENVIRONMENT == 'development' else False
+    app.run(host='0.0.0.0', port=5000, debug=debug)
