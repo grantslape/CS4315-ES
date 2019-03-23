@@ -1,7 +1,6 @@
 version: '3.5'
 
 services:
-
   # flask back end
   backend:
     container_name: flask-backend
@@ -11,7 +10,7 @@ services:
     image:
       flask-backend:latest
     volumes:
-      - './backend:/usr/src/app'
+      - '.:/usr/src/app'
     ports:
       - '45000:5000'
     networks:

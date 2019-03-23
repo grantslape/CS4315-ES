@@ -8,10 +8,16 @@ def build_response(obj: object):
     return response
 
 
-def json_response(obj: object):
+def json_response(obj: object, status: int):
     """Build a flask response from a given JSON body"""
     response = make_response(obj)
     response.headers['Content-Type'] = 'application/json'
+    response.status_code = status
+    return response
+
+
+def custom_response(obj: object):
+    response = make_response(obj)
     return response
 
 
