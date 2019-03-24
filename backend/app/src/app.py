@@ -3,10 +3,12 @@ from datetime import datetime
 
 from settings import ENVIRONMENT
 from routes.index import index
+from routes.reviews import reviews
 
 app = Flask(__name__)
 
 app.register_blueprint(index, url_prefix='/index')
+app.register_blueprint(reviews, url_prefix='/reviews')
 
 
 @app.route('/')
