@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
 
+from werkzeug.exceptions import NotFound, BadRequest
+
 from commons.GenericException import GenericException
 from commons.responses import error_response, build_response
 from settings import ENVIRONMENT
@@ -19,6 +21,7 @@ def only_json():
         return error_response(400, 'Request is not valid json:')
 
 
+# Error Handlers
 @app.errorhandler(GenericException)
 def handle_invalid_usage(error):
     response = jsonify(error.to_dict())
@@ -27,8 +30,18 @@ def handle_invalid_usage(error):
 
 
 @app.errorhandler(404)
-def page_not_found(e):
-    return build_response({'message': 'route not found'}), 404
+def page_not_found(e: NotFound):
+    return build_response({'message': e.description}), 404
+
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return build_response({'message': e.description}), 405
+
+
+@app.errorhandler(400)
+def malformed_payload(e: BadRequest):
+    return build_response({'message': e.description}), 400
 
 
 @app.route('/')

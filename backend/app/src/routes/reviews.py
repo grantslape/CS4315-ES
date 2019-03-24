@@ -1,4 +1,4 @@
-"""Endpoints for indexing and retrieving documents"""
+"""Endpoints for indexing and retrieving review documents"""
 from flask import Blueprint, request, json
 import requests
 
@@ -31,18 +31,18 @@ def get(doc_id: int):
     )
 
 
-@reviews.route('', methods=["POST"])
-def create_document():
+@reviews.route('/<int:doc_id>', methods=["PUT"])
+def create_document(doc_id: int):
     """Add a document"""
     data = request.get_json()
-    try:
-        doc_id = data['id']
-    except KeyError:
-        raise GenericException('id is required', status_code=400, payload=data)
-
     resp = requests.put(
         INDEX_URI.format(ES_HOST, doc_id),
         data=json.dumps(data),
         headers=HEADERS
     )
-    return json_response(resp.text, resp.status_code)
+
+    if resp.status_code >= 300:
+        return json_response(resp.text, resp.status_code)
+
+    data = resp.json()
+    return build_response({'message': data['result'], 'id': data['_id']}), resp.status_code

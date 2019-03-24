@@ -80,3 +80,4 @@ typings/
 *.pyc
 yelp_data/
 *.env
+*.json
