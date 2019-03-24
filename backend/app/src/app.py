@@ -26,6 +26,11 @@ def handle_invalid_usage(error):
     return response
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return build_response({'message': 'route not found'}), 404
+
+
 @app.route('/')
 def heartbeat():
     return build_response({'time': str(datetime.now()), 'env': ENVIRONMENT})
