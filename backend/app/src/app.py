@@ -1,19 +1,26 @@
-from flask import Flask, jsonify
+from flask import Flask, request
 from datetime import datetime
 
+from commons import error_response, build_response
 from settings import ENVIRONMENT
 from routes.index import index
 from routes.reviews import reviews
 
 app = Flask(__name__)
 
-app.register_blueprint(index, url_prefix='/index')
+app.register_blueprint(index, url_prefix='/index/<name>')
 app.register_blueprint(reviews, url_prefix='/reviews')
+
+
+@app.before_request
+def only_json():
+    if not request.is_json:
+        return error_response(400, 'Request is not valid json:')
 
 
 @app.route('/')
 def heartbeat():
-    return jsonify(time=str(datetime.now()), env=ENVIRONMENT)
+    return build_response({'time': str(datetime.now()), 'env': ENVIRONMENT})
 
 
 if __name__ == "__main__":
