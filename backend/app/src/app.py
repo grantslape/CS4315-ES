@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from datetime import datetime
 
-from commons import error_response, build_response
+from commons.GenericException import GenericException
+from commons.responses import error_response, build_response
 from settings import ENVIRONMENT
 from routes.index import index
 from routes.reviews import reviews
@@ -16,6 +17,13 @@ app.register_blueprint(reviews, url_prefix='/reviews')
 def only_json():
     if not request.is_json:
         return error_response(400, 'Request is not valid json:')
+
+
+@app.errorhandler(GenericException)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 
 @app.route('/')

@@ -3,7 +3,7 @@ from flask import Blueprint
 import requests
 
 from settings import ES_HOST
-from commons import json_response
+from commons.responses import json_response
 
 index = Blueprint('index', __name__)
 INDEX_URI = '{0}/{1}?pretty'

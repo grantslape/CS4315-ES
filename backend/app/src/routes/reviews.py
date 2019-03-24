@@ -2,7 +2,8 @@
 from flask import Blueprint, request, json
 import requests
 
-from commons import error_response, json_response
+from commons.GenericException import GenericException
+from commons.responses import json_response
 from settings import ES_HOST
 
 reviews = Blueprint('reviews', __name__)
@@ -25,7 +26,11 @@ def create_document():
     try:
         doc_id = data['id']
     except KeyError:
-        return error_response(400, 'id is required: {}'.format(data))
+        raise GenericException('id is required', status_code=400, payload=data)
 
-    resp = requests.put(INDEX_URI.format(ES_HOST, doc_id), data=json.dumps(data), headers=HEADERS)
+    resp = requests.put(
+        INDEX_URI.format(ES_HOST, doc_id),
+        data=json.dumps(data),
+        headers=HEADERS
+    )
     return json_response(resp.text, resp.status_code)
