@@ -81,3 +81,4 @@ typings/
 yelp_data/
 *.env
 *.json
+env/
