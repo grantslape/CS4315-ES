@@ -1,4 +1,8 @@
-"""Endpoints for indexing and retrieving review documents"""
+"""
+Endpoints for indexing and retrieving review documents
+This is almost a POC for generic flask endpoints, a better solution would use
+the ES helper library
+"""
 from flask import Blueprint, request, json
 import requests
 

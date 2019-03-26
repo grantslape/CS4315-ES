@@ -1,3 +1,4 @@
+"""Flask API for interacting with an Elasticsearch cluster"""
 from flask import Flask, request, jsonify
 from datetime import datetime
 
