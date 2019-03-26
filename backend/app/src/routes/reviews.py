@@ -8,18 +8,18 @@ import requests
 
 from commons.GenericException import GenericException
 from commons.responses import json_response, build_response
-from settings import ES_HOST
+from settings import ES_HOST, ES_PORT
 
 reviews = Blueprint('reviews', __name__)
 
-INDEX_URI = '{0}/reviews/_doc/{1}?pretty'
+INDEX_URI = '{0}:{1}/reviews/_doc/{2}?pretty'
 HEADERS = {'Content-Type': 'application/json'}
 
 
 @reviews.route('/<int:doc_id>', methods=["GET"])
 def get(doc_id: int):
     """Get a document by ID"""
-    resp = requests.get(INDEX_URI.format(ES_HOST, doc_id))
+    resp = requests.get(INDEX_URI.format(ES_HOST, ES_PORT, doc_id))
 
     if resp.status_code == 200:
         return build_response(resp.json()['_source']), 200
@@ -40,7 +40,7 @@ def create_document(doc_id: int):
     """Add a document"""
     data = request.get_json()
     resp = requests.put(
-        INDEX_URI.format(ES_HOST, doc_id),
+        INDEX_URI.format(ES_HOST, ES_PORT, doc_id),
         data=json.dumps(data),
         headers=HEADERS
     )

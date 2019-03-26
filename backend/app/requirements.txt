@@ -5,5 +5,5 @@ Jinja2==2.10
 MarkupSafe==1.1.1
 python-dotenv==0.10.1
 Werkzeug==0.15.0
-requests
+requests==2.21.0
 elasticsearch>=6.0.0,<7.0.0
