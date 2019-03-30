@@ -1,4 +1,9 @@
+import os
+
+from elasticsearch.helpers import streaming_bulk
 from elasticsearch_dsl import Document, Text, Date, Keyword, Short, Index
+
+from commons.es_client import get_client
 
 
 class Review(Document):
@@ -26,3 +31,4 @@ class Review(Document):
         if create:
             reviews.delete(ignore=404)
             reviews.create()
+            # TODO index docs?

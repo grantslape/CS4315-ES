@@ -17,7 +17,7 @@ def get_client() -> Elasticsearch:
     Get ES client or create
     :return:
     """
-    client = g.es if g.es else None
+    client = getattr(g, 'es', None)
     if client is None:
         client = g.es = Elasticsearch(
             hosts=[{'host': ES_HOST, 'port': ES_PORT}]
