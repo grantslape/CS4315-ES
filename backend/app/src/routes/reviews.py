@@ -21,7 +21,7 @@ def get(doc_id: int):
     except TransportError as e:
         raise GenericException(
             message='error getting document {}'.format(doc_id),
-            status_code=e.status_code,re
+            status_code=e.status_code,
             payload=e.info
         )
 

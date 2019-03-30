@@ -1,7 +1,6 @@
 version: '3.5'
 
 services:
-  # flask back end
   backend:
     container_name: flask-backend
     build:

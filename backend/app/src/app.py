@@ -3,10 +3,9 @@ from flask import Flask, request, jsonify
 from datetime import datetime
 from werkzeug.exceptions import NotFound, BadRequest
 
-from commons.GenericException import GenericException
-from commons.responses import error_response, build_response
-from commons.es_client import setup_conn
-from models.review import Review
+from commons import setup_conn, error_response, build_response, GenericException
+from commons.misc import set_up
+from models import Review, User, Tip, Checkin
 from settings import ENVIRONMENT
 from routes.index import index
 from routes.reviews import reviews
@@ -17,7 +16,10 @@ app.register_blueprint(index, url_prefix='/index/<name>')
 app.register_blueprint(reviews, url_prefix='/reviews')
 
 setup_conn()
-Review.set_up()
+set_up('reviews', Review.__name__)
+set_up('users', User.__name__)
+set_up('tips', Tip.__name__)
+set_up('checkins', Checkin.__name__)
 
 
 @app.before_request
