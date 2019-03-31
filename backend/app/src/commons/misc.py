@@ -2,7 +2,8 @@
 from elasticsearch_dsl import Index
 
 
-def set_up(name: str, class_name: str, create: bool = False):
+def set_up(name: str, class_name, create: bool = False):
+    """Register mappings with index, optionally delete and create the index"""
     index = Index(name)
     index.document(class_name)
 

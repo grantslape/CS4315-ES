@@ -1,4 +1,4 @@
-from elasticsearch_dsl import Document, Keyword, Text, Short, GeoPoint, Nested
+from elasticsearch_dsl import Document, Keyword, Text, Short, GeoPoint, Nested, Boolean
 
 from models.business.attributes import Attributes
 from models.business.hours import Hours
@@ -16,8 +16,7 @@ class Business(Document):
     location = GeoPoint()
     stars = Short()
     review_count = Short()
-    # TODO: coerce to bool?
-    is_open = Short()
+    is_open = Boolean()
     attributes = Nested(Attributes)
     categories = Keyword()
     hours = Nested(Hours)

@@ -3,7 +3,8 @@ from flask import Blueprint
 import requests
 
 from commons import GenericException
-from models import User, Review, Tip, Checkin
+from commons.misc import set_up
+from models import User, Review, Tip, Checkin, Business
 from settings import ES_HOST, ES_PORT
 from commons.responses import json_response, build_response
 
@@ -15,13 +16,15 @@ INDEX_URI = '{0}:{1}/{2}?pretty'
 def create_index(name: str):
     """Create an index for reviews"""
     if name == 'reviews':
-        return build_response({'message': Review.set_up(create=True)})
+        return build_response({'message': set_up(name, Review, create=True)})
     elif name == 'users':
-        return build_response({'message': User.set_up(create=True)})
+        return build_response({'message': set_up(name, User, create=True)})
     elif name == 'tips':
-        return build_response({'message': Tip.set_up(create=True)})
+        return build_response({'message': set_up(name, Tip, create=True)})
     elif name == 'checkins':
-        return build_response({'message': Checkin.set_up(create=True)})
+        return build_response({'message': set_up(name, Checkin, create=True)})
+    elif name == 'businesses':
+        return build_response({'message': set_up(name, Business, create=True)})
     else:
         raise GenericException(message='Not implemented', status_code=404)
 
