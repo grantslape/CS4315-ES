@@ -16,17 +16,19 @@ INDEX_URI = '{0}:{1}/{2}?pretty'
 def create_index(name: str):
     """Create an index for reviews"""
     if name == 'reviews':
-        return build_response({'message': set_up(name, Review, create=True)})
+        set_up(name, Review, create=True)
     elif name == 'users':
-        return build_response({'message': set_up(name, User, create=True)})
+        set_up(name, User, create=True)
     elif name == 'tips':
-        return build_response({'message': set_up(name, Tip, create=True)})
+        set_up(name, Tip, create=True)
     elif name == 'checkins':
-        return build_response({'message': set_up(name, Checkin, create=True)})
+        set_up(name, Checkin, create=True)
     elif name == 'businesses':
-        return build_response({'message': set_up(name, Business, create=True)})
+        set_up(name, Business, create=True)
     else:
         raise GenericException(message='Not implemented', status_code=404)
+
+    return build_response({'acknowledged': True})
 
 
 @index.route('', methods=["DELETE"])

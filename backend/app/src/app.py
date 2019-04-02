@@ -6,14 +6,15 @@ from werkzeug.exceptions import NotFound, BadRequest
 from commons import setup_conn, error_response, build_response, GenericException
 from commons.misc import set_up
 from models import Review, User, Tip, Checkin, Business
+from routes import index, reviews, businesses
 from settings import ENVIRONMENT
-from routes.index import index
-from routes.reviews import reviews
 
 app = Flask(__name__)
 
 app.register_blueprint(index, url_prefix='/index/<name>')
 app.register_blueprint(reviews, url_prefix='/reviews')
+# TODO de-duplicate code so we can use 1 route for all CRUD operations
+app.register_blueprint(businesses, url_prefix='/doc')
 
 setup_conn()
 set_up('reviews', Review)

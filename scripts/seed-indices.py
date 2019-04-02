@@ -4,6 +4,7 @@ import os
 import ast
 import time
 import arrow
+from threading import Thread
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
 
@@ -40,12 +41,12 @@ def parse_hours(obj: dict) -> dict:
     payload = {}
     for k, v in obj.items():
         time_str = v.split('-')
-        payload['{}_open'.format(k)] = arrow.get(time_str[0], 'H:m')
+        payload['{}_open'.format(k)] = arrow.get(time_str[0], 'H:m').datetime
         close = arrow.get(time_str[1], 'H:m')
         if close.hour < 6:
             # Next day for close time
             close = close.shift(days=+1)
-        payload['{}_close'.format(k)] = close
+        payload['{}_close'.format(k)] = close.datetime
 
     return payload
 
@@ -65,13 +66,29 @@ def parse_business(obj: dict) -> dict:
 
     # There are a lot of nullable bools saved as strings in this dataset
     if attributes is not None:
+        attributes = {k: v for k, v in attributes.items() if v is not None}
         for k, v in attributes.items():
-            if type(v) == str and (v == 'True' or v == 'False'):
-                attributes[k] = bool(v)
+            if type(v) == str:
+                if v[-1] == "'":
+                    if v[0] == 'u':
+                        # Extract unicode string
+                        attributes[k] = v[2:-1]
+                    else:
+                        # other double string
+                        attributes[k] = v[1:-1]
+
+                lower = v.lower()
+                if lower == 'true' or lower == 'false':
+                    attributes[k] = bool(lower)
+                elif lower == 'none':
+                    # This dataset has None for false sometimes
+                    attributes[k] = False
+
+        obj['attributes'] = attributes
 
     hours = obj['hours']
     if hours is not None:
-        hours = parse_hours(hours)
+        obj['hours'] = parse_hours(hours)
 
     return obj
 
@@ -94,7 +111,6 @@ def file_iterable(path: str, name: str) -> dict:
 
 def index_documents(path: str, name: str):
     es = Elasticsearch(hosts=[{'host': 'localhost', 'port': 49200}])
-    print(es)
     for ok, result in streaming_bulk(
             es,
             file_iterable(path, name)
@@ -126,8 +142,8 @@ def ext_index_reviews():
 
 
 if __name__ == '__main__':
-    # index_documents('review.json', 'reviews')
-    # index_documents('user.json', 'users')
-    # index_documents('tip.json', 'tips')
-    # index_documents('checkin.json', 'checkins')
-    index_documents('business.json', 'businesses')
+    Thread(target=index_documents, args=('review.json', 'reviews',)).start()
+    Thread(target=index_documents, args=('user.json', 'users',)).start()
+    Thread(target=index_documents, args=('tip.json', 'tips',)).start()
+    Thread(target=index_documents, args=('checkin.json', 'checkins',)).start()
+    Thread(target=index_documents, args=('business.json', 'businesses',)).start()
