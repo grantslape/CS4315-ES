@@ -10,13 +10,3 @@ class Checkin(Document):
 
     class Index:
         name = INDEX_NAME
-
-    @staticmethod
-    def set_up(create: bool = False):
-        """Set up index"""
-        checkins = Index(INDEX_NAME)
-        checkins.document(Checkin)
-
-        if create:
-            checkins.delete(ignore=404)
-            checkins.create()

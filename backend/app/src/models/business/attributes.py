@@ -3,6 +3,7 @@ from elasticsearch_dsl import InnerDoc, Boolean
 
 class Attributes(InnerDoc):
     """
+    !!! THIS IS NOT A COMPLETE LIST OF ATTRIBUTES !!!
     Attributes are highly variable, sometimes not present, sometimes present with
     null values.  Therefore, pre-processing will handle most categorization for now.
     """

@@ -1,3 +1,2 @@
-from .businesses import businesses
-from .reviews import reviews
+from .doc import document
 from .index import index
