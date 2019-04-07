@@ -12,7 +12,6 @@ from settings import ENVIRONMENT
 app = Flask(__name__)
 
 app.register_blueprint(index, url_prefix='/index/<string:name>')
-# THIS IS ACTUALLY ALL CRUD ROUTES
 app.register_blueprint(document, url_prefix='/doc/<string:name>/<int:doc_id>')
 
 setup_conn()
@@ -25,8 +24,8 @@ set_up('businesses', Business)
 
 @app.before_request
 def only_json():
-    if not request.is_json:
-        return error_response(400, 'Request is not valid json:')
+    if request.method in ('POST', 'PUT') and not request.is_json:
+        return error_response(400, 'Request is not valid json')
 
 
 # Error Handlers

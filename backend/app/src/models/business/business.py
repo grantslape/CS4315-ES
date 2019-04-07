@@ -17,9 +17,10 @@ class Business(Document):
     stars = Short()
     review_count = Short()
     is_open = Boolean()
-    attributes = Nested(Attributes)
     categories = Keyword()
+    # TODO: FLATTEN OUT HOURS AND ATTRIBUTES
     hours = Nested(Hours)
+    attributes = Nested(Attributes)
 
     class Index:
         name = INDEX_NAME

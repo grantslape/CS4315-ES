@@ -1,20 +1,24 @@
-import requests
 import json
-import os
 import ast
-import time
 import arrow
 from threading import Thread
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
 
 
-def parse_sub_obj(obj: dict, type: str) -> dict:
+def parse_sub_obj(obj: dict, doc_type: str) -> dict:
     """Parse subdicts of the given dict and return new dict"""
-    if type == 'businesses':
+    if doc_type == 'businesses':
         return parse_business(obj)
-    if type == 'users':
+    if doc_type == 'users':
         return parse_user(obj)
+    if doc_type == 'checkins':
+        return parse_checkins(obj)
+    if doc_type == 'reviews':
+        return parse_reviews(obj)
+    if doc_type == 'tips':
+        # Only date for now
+        return parse_reviews(obj)
     return obj
 
 
@@ -22,10 +26,35 @@ def parse_user(obj: dict) -> dict:
     """Parse out user specific stuff"""
     # user.friends, user.elite
     obj['friends'] = obj['friends'].split(', ')
-    obj['elite'] = obj['elite'].split(', ')
+    
+    obj['elite'] = obj['elite'].split(',')
+    if len(obj['elite']) == 0 or obj['elite'][0] == '': obj.pop('elite')
+
+    obj['yelping_since'] = parse_date(obj['yelping_since'])
+    return obj
+
+
+def parse_reviews(obj: dict) -> dict:
+    """Parse out review specific stuff"""
+    obj['date'] = parse_date(obj['date'])
+    return obj
+
+
+def parse_date(date: str):
+    return arrow.get(date, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss')
+
+
+def parse_checkins(obj: dict) -> dict:
+    """Parse out checkin specific dates"""
+    raw_dates = obj['date'].split(', ')
+    obj['date'] = []
+    for d in raw_dates:
+        obj['date'].append(parse_date(d))
+    return obj
 
 
 def parse_dict(obj: dict, key: str) -> dict:
+    # TODO: FLATTEN THIS SHIT OUT
     """Attempt to parse sub dicts that may not exist"""
     if obj is not None:
         try:
@@ -35,9 +64,10 @@ def parse_dict(obj: dict, key: str) -> dict:
             pass
     return obj
 
+
 def parse_hours(obj: dict) -> dict:
     """Parse a dict of business hours represented as OPEN-CLOSE into times"""
-    # Possible DayOpen, DayClose ?
+    # TODO: flatten into ranges for open period each day.
     payload = {}
     for k, v in obj.items():
         time_str = v.split('-')
@@ -53,12 +83,15 @@ def parse_hours(obj: dict) -> dict:
 
 def parse_business(obj: dict) -> dict:
     """Parse subdicts for business and cast attributes as needed"""
+    # TODO: FLATTEN THIS SHIT OUT
     if obj['categories'] is not None:
         obj['categories'] = obj['categories'].split(', ')
     obj['is_open'] = bool(obj['is_open'])
     obj['location'] = '{},{}'.format(obj.pop('latitude'), obj.pop('longitude'))
 
     # Parse sub-objects from strings to dicts
+    # TODO: FLATTEN THIS SHIT OUT
+    # TODO: refactor this into some methods
     attributes = obj['attributes']
     attributes = parse_dict(attributes, 'GoodForMeal')
     attributes = parse_dict(attributes, 'Ambience')
@@ -94,22 +127,23 @@ def parse_business(obj: dict) -> dict:
 
 
 def file_iterable(path: str, name: str) -> dict:
-    """File iterable to index reviews"""
+    """File iterable to return pre-processed, indexable docs"""
     with open(path, 'r') as file:
         counter = 1
         for line in file:
             doc = parse_sub_obj(json.loads(line), name)
-            payload = {
+            meta = {
                 "_id": counter,
                 "_index": name,
-                "_type": "doc",
-                "doc": doc
+                "_type": "doc"
             }
+            payload = {**meta, **doc}
             counter += 1
             yield payload
 
 
 def index_documents(path: str, name: str):
+    """Use the streaming bulk API to index some documents"""
     es = Elasticsearch(hosts=[{'host': 'localhost', 'port': 49200}])
     for ok, result in streaming_bulk(
             es,
@@ -125,25 +159,10 @@ def index_documents(path: str, name: str):
             print(doc_id)
 
 
-def ext_index_reviews():
-    """Index reviews externally by hitting the flask API"""
-    with open('review.json', 'r') as file:
-        counter = 1
-        url = 'http://localhost:45000/reviews/{}'
-        headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-
-        for line in file:
-            review = json.loads(line)
-            resp = requests.put(url.format(counter), headers=headers, data=json.dumps(review))
-            if resp.status_code > 201:
-                print('failure: {}'.format(resp.json()))
-
-            counter += 1
-
-
 if __name__ == '__main__':
+    # TODO: Still some sort of mapping error going on?
     Thread(target=index_documents, args=('review.json', 'reviews',)).start()
     Thread(target=index_documents, args=('user.json', 'users',)).start()
     Thread(target=index_documents, args=('tip.json', 'tips',)).start()
     Thread(target=index_documents, args=('checkin.json', 'checkins',)).start()
-    Thread(target=index_documents, args=('business.json', 'businesses',)).start()
+    # Thread(target=index_documents, args=('business.json', 'businesses',)).start()

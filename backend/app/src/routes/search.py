@@ -1,7 +1,12 @@
 """Endpoints for searching documents on a given index"""
-from flask import Blueprint
+from flask import Blueprint, request
 
-from settings import ES_HOST
+from commons import error_response
+
+search = Blueprint('search', __name__)
 
 
-# TODO: Use the freaking ElasticSearch python helper library
+@search.route('', methods=["GET"])
+def get():
+    query = request.args.get('q')
+    return error_response(404, 'not implemented')
