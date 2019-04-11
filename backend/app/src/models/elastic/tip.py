@@ -3,7 +3,7 @@ from elasticsearch_dsl import Document, Keyword, Date, Text, Short
 INDEX_NAME = 'tips'
 
 
-class Tip(Document):
+class TipElastic(Document):
     user_id = Keyword()
     business_id = Keyword()
     text = Text()

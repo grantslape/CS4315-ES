@@ -3,7 +3,7 @@ from elasticsearch_dsl import Document, Text, Date, Keyword, Short
 INDEX_NAME = 'reviews'
 
 
-class Review(Document):
+class ReviewElastic(Document):
     business_id = Keyword()
     cool = Short()
     date = Date(default_timezone='UTC', format='date_hour_minute_second')

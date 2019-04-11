@@ -1,12 +1,10 @@
-from elasticsearch_dsl import Document, Keyword, Text, Short, GeoPoint, Nested, Boolean
+from elasticsearch_dsl import Document, Keyword, Text, Short, GeoPoint, Boolean
 
-from models.business.attributes import Attributes
-from models.business.hours import Hours
 
 INDEX_NAME = 'businesses'
 
 
-class Business(Document):
+class BusinessElastic(Document):
     business_id = Keyword()
     name = Text()
     address = Text()
@@ -18,9 +16,10 @@ class Business(Document):
     review_count = Short()
     is_open = Boolean()
     categories = Keyword()
-    # TODO: FLATTEN OUT HOURS AND ATTRIBUTES
-    hours = Nested(Hours)
-    attributes = Nested(Attributes)
+    Ambience = Text()
+    BusinessParking = Text()
+    GoodForMeal = Text()
+
 
     class Index:
         name = INDEX_NAME

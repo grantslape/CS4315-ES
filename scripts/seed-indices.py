@@ -1,6 +1,7 @@
 import json
 import ast
 import arrow
+from arrow import Arrow
 from threading import Thread
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
@@ -24,11 +25,11 @@ def parse_sub_obj(obj: dict, doc_type: str) -> dict:
 
 def parse_user(obj: dict) -> dict:
     """Parse out user specific stuff"""
-    # user.friends, user.elite
     obj['friends'] = obj['friends'].split(', ')
-    
     obj['elite'] = obj['elite'].split(',')
-    if len(obj['elite']) == 0 or obj['elite'][0] == '': obj.pop('elite')
+
+    if len(obj['elite']) == 0 or obj['elite'][0] == '':
+        obj.pop('elite')
 
     obj['yelping_since'] = parse_date(obj['yelping_since'])
     return obj
@@ -40,7 +41,7 @@ def parse_reviews(obj: dict) -> dict:
     return obj
 
 
-def parse_date(date: str):
+def parse_date(date: str) -> Arrow:
     return arrow.get(date, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss')
 
 
@@ -54,7 +55,6 @@ def parse_checkins(obj: dict) -> dict:
 
 
 def parse_dict(obj: dict, key: str) -> dict:
-    # TODO: FLATTEN THIS SHIT OUT
     """Attempt to parse sub dicts that may not exist"""
     if obj is not None:
         try:
@@ -67,35 +67,33 @@ def parse_dict(obj: dict, key: str) -> dict:
 
 def parse_hours(obj: dict) -> dict:
     """Parse a dict of business hours represented as OPEN-CLOSE into times"""
-    # TODO: flatten into ranges for open period each day.
     payload = {}
     for k, v in obj.items():
+        open_period = payload['open_period_{}'.format(k.lower())] = {}
         time_str = v.split('-')
-        payload['{}_open'.format(k)] = arrow.get(time_str[0], 'H:m').datetime
-        close = arrow.get(time_str[1], 'H:m')
-        if close.hour < 6:
+        open_period['gte'] = arrow.get(time_str[0], 'H:m').datetime
+        close_time = arrow.get(time_str[1], 'H:m')
+        if close_time.hour < 6:
             # Next day for close time
-            close = close.shift(days=+1)
-        payload['{}_close'.format(k)] = close.datetime
+            close_time = close_time.shift(days=+1)
+        open_period['lte'] = close_time.datetime
 
     return payload
 
 
 def parse_business(obj: dict) -> dict:
     """Parse subdicts for business and cast attributes as needed"""
-    # TODO: FLATTEN THIS SHIT OUT
     if obj['categories'] is not None:
         obj['categories'] = obj['categories'].split(', ')
     obj['is_open'] = bool(obj['is_open'])
     obj['location'] = '{},{}'.format(obj.pop('latitude'), obj.pop('longitude'))
 
     # Parse sub-objects from strings to dicts
-    # TODO: FLATTEN THIS SHIT OUT
     # TODO: refactor this into some methods
     attributes = obj['attributes']
-    attributes = parse_dict(attributes, 'GoodForMeal')
-    attributes = parse_dict(attributes, 'Ambience')
-    attributes = parse_dict(attributes, 'BusinessParking')
+    # attributes = parse_dict(attributes, 'GoodForMeal')
+    # attributes = parse_dict(attributes, 'Ambience')
+    # attributes = parse_dict(attributes, 'BusinessParking')
 
     # There are a lot of nullable bools saved as strings in this dataset
     if attributes is not None:
@@ -117,11 +115,13 @@ def parse_business(obj: dict) -> dict:
                     # This dataset has None for false sometimes
                     attributes[k] = False
 
-        obj['attributes'] = attributes
+        obj = {**obj, **attributes}
+        obj.pop('attributes')
 
     hours = obj['hours']
-    if hours is not None:
-        obj['hours'] = parse_hours(hours)
+    if type(hours) == dict:
+        obj = {**obj, **parse_hours(hours)}
+        obj.pop('hours')
 
     return obj
 
@@ -160,9 +160,8 @@ def index_documents(path: str, name: str):
 
 
 if __name__ == '__main__':
-    # TODO: Still some sort of mapping error going on?
     Thread(target=index_documents, args=('review.json', 'reviews',)).start()
+    Thread(target=index_documents, args=('business.json', 'businesses',)).start()
     Thread(target=index_documents, args=('user.json', 'users',)).start()
     Thread(target=index_documents, args=('tip.json', 'tips',)).start()
     Thread(target=index_documents, args=('checkin.json', 'checkins',)).start()
-    # Thread(target=index_documents, args=('business.json', 'businesses',)).start()

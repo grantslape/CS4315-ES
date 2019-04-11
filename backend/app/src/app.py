@@ -5,7 +5,7 @@ from werkzeug.exceptions import NotFound, BadRequest
 
 from commons import setup_conn, error_response, build_response, GenericException
 from commons.misc import set_up
-from models import Review, User, Tip, Checkin, Business
+from models import BusinessElastic, CheckinElastic, TipElastic, UserElastic, ReviewElastic
 from routes import index, document
 from settings import ENVIRONMENT
 
@@ -15,11 +15,11 @@ app.register_blueprint(index, url_prefix='/index/<string:name>')
 app.register_blueprint(document, url_prefix='/doc/<string:name>/<int:doc_id>')
 
 setup_conn()
-set_up('reviews', Review)
-set_up('users', User)
-set_up('tips', Tip)
-set_up('checkins', Checkin)
-set_up('businesses', Business)
+set_up('reviews', ReviewElastic)
+set_up('users', UserElastic)
+set_up('tips', TipElastic)
+set_up('checkins', CheckinElastic)
+set_up('businesses', BusinessElastic)
 
 
 @app.before_request

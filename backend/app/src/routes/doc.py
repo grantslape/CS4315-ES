@@ -3,7 +3,8 @@ from elasticsearch import TransportError
 from flask import Blueprint, request
 
 from commons import GenericException, build_response
-from models import Business, Tip, User, Checkin, Review
+from models import CheckinElastic, BusinessElastic, TipElastic, UserElastic, ReviewElastic
+from models.python.user import User
 
 document = Blueprint('document', __name__)
 
@@ -13,15 +14,15 @@ def get(name: str, doc_id: int):
     """Get a document by ID"""
     try:
         if name == 'businesses':
-            resp = Business.get(id=doc_id, index=name)
+            resp = BusinessElastic.get(id=doc_id, index=name)
         elif name == 'tips':
-            resp = Tip.get(id=doc_id, index=name)
+            resp = TipElastic.get(id=doc_id, index=name)
         elif name == 'users':
-            resp = User.get(id=doc_id, index=name)
+            resp = User.hydrate(UserElastic.get(id=doc_id, index=name))
         elif name == 'checkins':
-            resp = Checkin.get(id=doc_id, index=name)
+            resp = CheckinElastic.get(id=doc_id, index=name)
         elif name == 'reviews':
-            resp = Review.get(id=doc_id, index=name)
+            resp = ReviewElastic.get(id=doc_id, index=name)
         else:
             raise GenericException('unknown index {}'.format(name), 400)
     except TransportError as e:
@@ -31,7 +32,7 @@ def get(name: str, doc_id: int):
             payload=e.info
         )
 
-    return build_response(resp.to_dict())
+    return build_response(resp.serialize())
 
 
 @document.route('', methods=["PUT"])
@@ -40,15 +41,15 @@ def create_document(name: str, doc_id: int):
     data = request.get_json()
 
     if name == 'businesses':
-        doc = Business(**data)
+        doc = BusinessElastic(**data)
     elif name == 'tips':
-        doc = Tip(**data)
+        doc = TipElastic(**data)
     elif name == 'checkins':
-        doc = Checkin(**data)
+        doc = CheckinElastic(**data)
     elif name == 'users':
-        doc = User(**data)
+        doc = UserElastic(**data)
     elif name == 'reviews':
-        doc = Review(**data)
+        doc = ReviewElastic(**data)
     else:
         raise GenericException('unknown index {}'.format(name), 400)
 
@@ -70,15 +71,15 @@ def create_document(name: str, doc_id: int):
 def delete_document(name: str, doc_id: int):
     try:
         if name == 'businesses':
-            Business.get(id=doc_id, index=name).delete(index=name)
+            BusinessElastic.get(id=doc_id, index=name).delete(index=name)
         elif name == 'tips':
-            Tip.get(id=doc_id, index=name).delete(index=name)
+            TipElastic.get(id=doc_id, index=name).delete(index=name)
         elif name == 'checkins':
-            Checkin.get(id=doc_id, index=name).delete(index=name)
+            CheckinElastic.get(id=doc_id, index=name).delete(index=name)
         elif name == 'users':
-            User.get(id=doc_id, index=name).delete(index=name)
+            UserElastic.get(id=doc_id, index=name).delete(index=name)
         elif name == 'reviews':
-            Review.get(id=doc_id, index=name).delete(index=name)
+            ReviewElastic.get(id=doc_id, index=name).delete(index=name)
         else:
             raise GenericException('unknown index {}'.format(name), 400)
     except TransportError as e:
