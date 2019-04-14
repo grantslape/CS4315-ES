@@ -112,7 +112,7 @@ def parse_business(obj: dict) -> dict:
                 if lower == 'true' or lower == 'false':
                     attributes[k] = bool(lower)
                 elif lower == 'none':
-                    # This dataset has None for false sometimes
+                    # This dataset has None for false sometimes which ES can't handle
                     attributes[k] = False
 
         obj = {**obj, **attributes}

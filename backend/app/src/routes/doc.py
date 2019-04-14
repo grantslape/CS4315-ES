@@ -1,10 +1,11 @@
-"""Endpounts for indexing and retrieving business documents"""
+"""Endpoints for indexing and retrieving documents"""
 from elasticsearch import TransportError
 from flask import Blueprint, request
 
 from commons import GenericException, build_response
 from models import CheckinElastic, BusinessElastic, TipElastic, UserElastic, ReviewElastic
-from models.python.user import User
+from models.python import Tip, Checkin, User, Business
+from models.python.review import Review
 
 document = Blueprint('document', __name__)
 
@@ -14,15 +15,15 @@ def get(name: str, doc_id: int):
     """Get a document by ID"""
     try:
         if name == 'businesses':
-            resp = BusinessElastic.get(id=doc_id, index=name)
+            resp = Business.hydrate(BusinessElastic.get(id=doc_id, index=name))
         elif name == 'tips':
-            resp = TipElastic.get(id=doc_id, index=name)
+            resp = Tip.hydrate(TipElastic.get(id=doc_id, index=name))
         elif name == 'users':
             resp = User.hydrate(UserElastic.get(id=doc_id, index=name))
         elif name == 'checkins':
-            resp = CheckinElastic.get(id=doc_id, index=name)
+            resp = Checkin.hydrate(CheckinElastic.get(id=doc_id, index=name))
         elif name == 'reviews':
-            resp = ReviewElastic.get(id=doc_id, index=name)
+            resp = Review.hydrate(ReviewElastic.get(id=doc_id, index=name))
         else:
             raise GenericException('unknown index {}'.format(name), 400)
     except TransportError as e:
@@ -41,15 +42,20 @@ def create_document(name: str, doc_id: int):
     data = request.get_json()
 
     if name == 'businesses':
-        doc = BusinessElastic(**data)
+        business = Business(**data)
+        doc = BusinessElastic(**business.dehydrate())
     elif name == 'tips':
-        doc = TipElastic(**data)
+        tip = Tip(**data)
+        doc = TipElastic(**tip.dehydrate())
     elif name == 'checkins':
-        doc = CheckinElastic(**data)
+        checkin = Checkin(**data)
+        doc = CheckinElastic(**checkin.dehydrate())
     elif name == 'users':
-        doc = UserElastic(**data)
+        user = User(**data)
+        doc = UserElastic(**user.dehydrate())
     elif name == 'reviews':
-        doc = ReviewElastic(**data)
+        review = Review(**data)
+        doc = ReviewElastic(**review.dehydrate())
     else:
         raise GenericException('unknown index {}'.format(name), 400)
 

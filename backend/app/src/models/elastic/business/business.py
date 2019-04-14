@@ -20,6 +20,5 @@ class BusinessElastic(Document):
     BusinessParking = Text()
     GoodForMeal = Text()
 
-
     class Index:
         name = INDEX_NAME

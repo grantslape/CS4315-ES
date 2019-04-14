@@ -1,6 +1,6 @@
 """Packed user object"""
-import arrow
-from elasticsearch_dsl import Document
+from commons import format_date
+from models import UserElastic
 
 
 class User(object):
@@ -11,7 +11,7 @@ class User(object):
         self.user_id = kwargs['user_id']
         self.name = kwargs['name']
         self.review_count = kwargs['review_count']
-        self.yelping_since = arrow.get(kwargs['yelping_since']).format('YYYY-MM-DDTHH:mm:ss')
+        self.yelping_since = format_date(kwargs['yelping_since'])
         self.useful = kwargs['useful']
         self.funny = kwargs['funny']
         self.cool = kwargs['cool']
@@ -39,19 +39,20 @@ class User(object):
         return self.__dict__
 
     @staticmethod
-    def hydrate(es_model: Document):
+    def hydrate(es_model: UserElastic):
         """
         Hydrate model by building compliment sub-object
-        :param es_model:
+        :param es_model: Document representing ES Model
         :return: User
         """
         model_dict = es_model.to_dict()
         compliment = {}
 
-        for key, value in model_dict.items():
+        for key in list(model_dict.keys()):
+            # key_items = ['compliment', 'foo']
             key_items = key.split('_')
             if key_items[0] == 'compliment':
-                compliment[key_items[1]] = value
+                compliment[key_items[1]] = model_dict.pop(key)
 
         model_dict['compliment'] = compliment
         return User(**model_dict)
