@@ -6,13 +6,14 @@ from werkzeug.exceptions import NotFound, BadRequest
 from commons import setup_conn, error_response, build_response, GenericException
 from commons.misc import set_up
 from models import BusinessElastic, CheckinElastic, TipElastic, UserElastic, ReviewElastic
-from routes import index, document
+from routes import index, document, search
 from settings import ENVIRONMENT
 
 app = Flask(__name__)
 
 app.register_blueprint(index, url_prefix='/index/<string:name>')
 app.register_blueprint(document, url_prefix='/doc/<string:name>/<int:doc_id>')
+app.register_blueprint(search, url_prefix='/search')
 
 setup_conn()
 set_up('reviews', ReviewElastic)

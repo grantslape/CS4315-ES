@@ -30,6 +30,7 @@ class Business(object):
         self.review_count = kwargs['review_count']
         self.is_open = kwargs['is_open']
         self.categories = kwargs['categories']
+        # Use hydrate if these are null.
         self.hours = kwargs['hours']
         self.attributes = kwargs['attributes']
 

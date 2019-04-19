@@ -4,8 +4,8 @@ from flask import Blueprint, request
 
 from commons import GenericException, build_response
 from models import CheckinElastic, BusinessElastic, TipElastic, UserElastic, ReviewElastic
-from models.python import Tip, Checkin, User, Business
-from models.python.review import Review
+from models.python import Tip, Checkin, User, Business, Review
+
 
 document = Blueprint('document', __name__)
 
