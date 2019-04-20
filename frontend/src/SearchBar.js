@@ -3,18 +3,18 @@ import React, { Component } from 'react';
 class SearchBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {query: ''};
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({query: event.target.value});
   }
 
   handleSubmit(event) {
-    alert('Search query would be: ' + this.state.value);
+    alert('Search query would be: ' + this.state.query);
     event.preventDefault();
   }
 
@@ -26,7 +26,7 @@ class SearchBar extends Component {
               type="text"
               autoFocus
               placeholder="Enter query"
-              value={this.state.value}
+              value={this.state.query}
               onChange={this.handleChange}
             />
           </label>
