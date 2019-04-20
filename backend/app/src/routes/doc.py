@@ -2,12 +2,14 @@
 from elasticsearch import TransportError
 from flask import Blueprint, request
 
-from commons import GenericException, build_response
+from commons import GenericException, build_response, get_logger
 from models import CheckinElastic, BusinessElastic, TipElastic, UserElastic, ReviewElastic
 from models.python import Tip, Checkin, User, Business, Review
 
 
 document = Blueprint('document', __name__)
+
+logger = get_logger(__name__)
 
 
 @document.route('', methods=["GET"])
@@ -64,8 +66,10 @@ def create_document(name: str, doc_id: int):
     try:
         doc.save()
     except ValueError as e:
+        message = str(e)
+        logger.error(message)
         raise GenericException(
-            message=str(e),
+            message=message,
             status_code=400,
             payload=request.get_json()
         )
@@ -89,8 +93,10 @@ def delete_document(name: str, doc_id: int):
         else:
             raise GenericException('unknown index {}'.format(name), 400)
     except TransportError as e:
+        message = 'error deleting document {}'.format(doc_id)
+        logger.error(message)
         raise GenericException(
-            message='error deleting document {}'.format(doc_id),
+            message=message,
             status_code=e.status_code,
             payload=e.info
         )

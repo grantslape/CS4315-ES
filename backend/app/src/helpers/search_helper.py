@@ -36,7 +36,7 @@ def generic_search(query: str, page_size: int = 10, offset: int = 0):
     # Make query and highlight
     s = Search(index=INDICES).query(query).highlight_options(order='score').highlight('text')
 
-    s = s.extra(indices_boost={"businesses": 2})
+    s = s.extra(indices_boost=[{"businesses": 2}])
 
     s = s[offset:offset + page_size]
     return s.execute()
@@ -48,8 +48,13 @@ def hydrate_models(models):
         if model.meta.index == 'businesses':
             payload.append(Business.hydrate(model).serialize())
         elif model.meta.index == 'reviews':
-            payload.append(Review.hydrate(model).serialize())
+            review = Review.hydrate(model)
+            # dynamically adding a prop is a little smelly
+            review.highlights = list(model.meta.highlight.text)
+            payload.append(review.serialize())
         else:
-            raise GenericException('model index not found!')
+            message = 'model not found for index: {}'.format(model.meta.index)
+            logger.error(message)
+            raise GenericException(message)
 
     return payload
