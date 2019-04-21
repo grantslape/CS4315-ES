@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NavBar from "./NavBar";
 import API from './helpers/API';
+import Results from "./Results";
 
 export default class Search extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ export default class Search extends Component {
     return (
       <div>
         <NavBar onChange={this.handleChange} handleSubmit={this.handleSubmit}/>
+        <Results results={this.state.results}/>
       </div>
     )
   }
