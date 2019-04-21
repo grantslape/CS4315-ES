@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NavBar from "./NavBar";
+import API from './helpers/API';
 
 export default class Search extends Component {
   constructor(props) {
@@ -12,12 +13,19 @@ export default class Search extends Component {
   }
 
   handleChange(query) {
-    this.setState({query});
+    this.setState({ query });
   }
 
   handleSubmit() {
-    //TODO: make query
-    console.log(this.state.query);
+    let query = this.state.query;
+
+    API.get(`/search?q=${query}`)
+      .then(res => {
+        const results = res.data;
+        this.setState({ results });
+
+        console.log(this.state.results);
+      })
   }
 
   render() {

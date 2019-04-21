@@ -15,6 +15,7 @@ class NavBar extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
     this.props.handleSubmit();
   }
 

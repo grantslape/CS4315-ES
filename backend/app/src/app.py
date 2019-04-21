@@ -1,5 +1,6 @@
 """Flask API for interacting with an Elasticsearch cluster"""
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from datetime import datetime
 from werkzeug.exceptions import NotFound, BadRequest
 
@@ -10,6 +11,7 @@ from routes import index, document, search
 from settings import ENVIRONMENT
 
 app = Flask(__name__)
+cors = CORS(app)
 
 app.register_blueprint(index, url_prefix='/index/<string:name>')
 app.register_blueprint(document, url_prefix='/doc/<string:name>/<int:doc_id>')
