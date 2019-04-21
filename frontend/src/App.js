@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
-import NavBar from './NavBar.js';
+import Search from "./Search";
 
 class App extends Component {
 
   render() {
     return (
       <div className="App">
-        <NavBar />
+        <Search />
         <footer className="App-footer">
           Copyright 2019 Grant H. Slape
         </footer>
