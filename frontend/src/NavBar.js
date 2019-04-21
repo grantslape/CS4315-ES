@@ -47,7 +47,7 @@ class NavBar extends Component {
               value={query}
               onChange={this.handleChange}
             />
-            <Button variant="outline-success">Search</Button>
+            <Button variant="outline-success" onClick={this.handleSubmit}>Search</Button>
           </Form>
         </Navbar.Collapse>
       </Navbar>
