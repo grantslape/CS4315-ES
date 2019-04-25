@@ -12,7 +12,7 @@ index = Blueprint('index', __name__)
 INDEX_URI = '{0}:{1}/{2}?pretty'
 
 
-@index.route('', methods=["POST"])
+@index.route('', methods=['POST'])
 def create_index(name: str):
     """Create an index for reviews"""
     if name == 'reviews':
@@ -31,7 +31,7 @@ def create_index(name: str):
     return build_response({'acknowledged': True})
 
 
-@index.route('', methods=["DELETE"])
+@index.route('', methods=['DELETE'])
 def delete_index(name: str):
     """Delete the index"""
     # TODO: Use Helper Library here

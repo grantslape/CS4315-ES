@@ -36,7 +36,7 @@ def generic_search(query: str, page_size: int = 10, offset: int = 0):
     # Make query and highlight
     s = Search(index=INDICES).query(query).highlight_options(order='score').highlight('text')
 
-    s = s.extra(indices_boost=[{"businesses": 2}])
+    s = s.extra(indices_boost=[{'businesses': 2}])
 
     s = s[offset:offset + page_size]
     return s.execute()

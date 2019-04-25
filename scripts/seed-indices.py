@@ -133,9 +133,9 @@ def file_iterable(path: str, name: str) -> dict:
         for line in file:
             doc = parse_sub_obj(json.loads(line), name)
             meta = {
-                "_id": counter,
-                "_index": name,
-                "_type": "doc"
+                '_id': counter,
+                '_index': name,
+                '_type': 'doc'
             }
             payload = {**meta, **doc}
             counter += 1

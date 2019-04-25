@@ -1,0 +1,9 @@
+default_stages: [commit, push]
+repos:
+- repo: git://github.com/pre-commit/pre-commit-hooks
+  rev: v2.1.0
+  hooks:
+    - id: check-merge-conflict
+    - id: check-ast
+    - id: check-builtin-literals
+    - id: double-quote-string-fixer

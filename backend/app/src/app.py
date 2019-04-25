@@ -59,6 +59,6 @@ def heartbeat():
     return build_response({'time': str(datetime.now()), 'env': ENVIRONMENT})
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     debug = True if ENVIRONMENT == 'development' else False
     app.run(host='0.0.0.0', port=5000, debug=debug)

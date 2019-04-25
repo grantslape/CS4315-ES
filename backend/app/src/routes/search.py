@@ -8,7 +8,7 @@ search = Blueprint('search', __name__)
 logger = get_logger(__name__)
 
 
-@search.route('', methods=["GET"])
+@search.route('', methods=['GET'])
 def get():
     query = request.args.get('q')
     offset = int(request.args.get('offset', default=0))

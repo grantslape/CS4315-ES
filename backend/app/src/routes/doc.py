@@ -12,7 +12,7 @@ document = Blueprint('document', __name__)
 logger = get_logger(__name__)
 
 
-@document.route('', methods=["GET"])
+@document.route('', methods=['GET'])
 def get(name: str, doc_id: int):
     """Get a document by ID"""
     try:
@@ -38,7 +38,7 @@ def get(name: str, doc_id: int):
     return build_response(resp.serialize())
 
 
-@document.route('', methods=["PUT"])
+@document.route('', methods=['PUT'])
 def create_document(name: str, doc_id: int):
     """Add a document"""
     data = request.get_json()
@@ -77,7 +77,7 @@ def create_document(name: str, doc_id: int):
     return build_response(doc.to_dict())
 
 
-@document.route('', methods=["DELETE"])
+@document.route('', methods=['DELETE'])
 def delete_document(name: str, doc_id: int):
     try:
         if name == 'businesses':
