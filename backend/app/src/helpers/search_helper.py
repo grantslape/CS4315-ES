@@ -46,11 +46,14 @@ def hydrate_models(models):
     payload = []
     for model in models:
         if model.meta.index == 'businesses':
-            payload.append(Business.hydrate(model).serialize())
+            business = Business.hydrate(model)
+            business.doc_type = 'business'
+            payload.append(business.serialize())
         elif model.meta.index == 'reviews':
             review = Review.hydrate(model)
             # dynamically adding a prop is a little smelly
             review.highlights = list(model.meta.highlight.text)
+            review.doc_type = 'review'
             payload.append(review.serialize())
         else:
             message = 'model not found for index: {}'.format(model.meta.index)

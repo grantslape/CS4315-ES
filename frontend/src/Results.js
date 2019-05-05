@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
 export default class Results extends Component {
+
   render() {
     const results = this.props.results;
 
-    if (results !== null) {
+    if (results !== null && results.length > 0) {
       return (
         <ul>
-          {results.map((result, i) => <li key={i} className="Result">{JSON.stringify(result)}<hr/></li>)}
+          {results}
         </ul>
       );
     }
