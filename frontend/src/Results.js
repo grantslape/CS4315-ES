@@ -25,6 +25,7 @@ export default class Results extends Component {
     }
   }
 
+  // Hydrate the result models
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.results !== prevProps.results) {
       this.setState({ results: this.parseResults(this.props.results) });

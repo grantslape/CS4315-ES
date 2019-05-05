@@ -34,7 +34,11 @@ def generic_search(query: str, page_size: int = 10, offset: int = 0):
         fields=FUZZY_FIELDS
     )
     # Make query and highlight
-    s = Search(index=INDICES).query(query).highlight_options(order='score').highlight('text')
+    s = Search(index=INDICES).query(query).highlight_options(
+        order='score',
+        pre_tags=['<b>'],
+        post_tags=['</b>']
+    ).highlight('text')
 
     s = s.extra(indices_boost=[{'businesses': 2}])
 
@@ -51,20 +55,12 @@ def hydrate_models(models):
             payload.append(business.serialize())
         elif model.meta.index == 'reviews':
             review = Review.hydrate(model)
-            review.highlights = parse_highlights(list(model.meta.highlight.text))
+            review.highlights = list(model.meta.highlight.text)
             review.doc_type = 'review'
             payload.append(review.serialize())
         else:
             message = 'model not found for index: {}'.format(model.meta.index)
             logger.error(message)
-            raise GenericException(message)
-
-    return payload
-
-
-def parse_highlights(highlights: [str]) -> [str]:
-    payload = []
-    for highlight in highlights:
-        payload.append(highlight.replace('<em>', '<b>').replace('</em>', '</b>'))
+            raise GenericException(message, 400)
 
     return payload
