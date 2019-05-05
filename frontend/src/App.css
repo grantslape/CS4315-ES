@@ -39,6 +39,11 @@
   padding-bottom: 5px;
 }
 
+.Results {
+  list-style-type: none;
+  padding-left: 0;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import NavBar from "./NavBar";
 import API from './helpers/API';
 import Results from "./Results";
-import ResultBusiness from "./models/ResultBusiness";
-import ResultReview from "./models/ResultReview";
 
 export default class Search extends Component {
   constructor(props) {
@@ -24,19 +22,8 @@ export default class Search extends Component {
 
     API.get(`/search?q=${query}`)
       .then(res => {
-        const response = res.data;
-        console.log(response);
-
-        const results = response.map((result, index) => {
-          if (result.doc_type === 'business') {
-            return <ResultBusiness business={result} key={index}/>;
-          } else if (result.doc_type === 'review') {
-            return <ResultReview review={result} key={index}/>;
-          } else {
-            return null;
-          }
-        });
-
+        const results = res.data;
+        console.log(results);
         this.setState({ results });
       })
   }
