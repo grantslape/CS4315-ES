@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import NavBar from "./NavBar";
 import API from './helpers/API';
-import Results from "./Results";
+import Results from "./models/Results";
+import Review from "./models/Review";
+import Business from "./models/Business";
 import {Route, withRouter} from "react-router-dom";
 
 class Search extends Component {
@@ -27,7 +29,7 @@ class Search extends Component {
         console.log(results);
         this.setState({ results });
         this.props.history.push('/search');
-      })
+      });
   }
 
   render() {
@@ -40,7 +42,8 @@ class Search extends Component {
             (props) => <Results {...props} results={this.state.results}/>
           }
         />
-        <Route path={"/reviews/:id"}/>
+        <Route path={"/reviews/:id"} component={Review}/>
+        <Route path={"/businesses/:id"} component={Business}/>
       </div>
     )
   }

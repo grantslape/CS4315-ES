@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ResultBusiness from "./models/ResultBusiness";
-import ResultReview from "./models/ResultReview";
+import ResultBusiness from "./ResultBusiness";
+import ResultReview from "./ResultReview";
 
 export default class Results extends Component {
   constructor(props) {

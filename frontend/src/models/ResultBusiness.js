@@ -29,7 +29,7 @@ export default class ResultBusiness extends Component {
         </Row>
         <Row>
           <Col>
-            {business.categories.join(', ')}
+            {business.categories && business.categories.join(', ')}
           </Col>
         </Row>
       </Container>
