@@ -8,7 +8,7 @@ export default class Review extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {review: null};
+    this.state = { review: null };
   }
 
   componentDidMount() {

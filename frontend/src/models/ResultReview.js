@@ -3,6 +3,7 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { Markup } from 'interweave';
+import { Link } from "react-router-dom";
 
 export default class ResultReview extends Component {
   render() {
@@ -12,7 +13,7 @@ export default class ResultReview extends Component {
       <Container>
         <Row>
           <Col xs={12} md={6}>
-            {review.business_id}
+              {review.business_id}
           </Col>
           <Col xs={12} md={6}>
             {review.user_id}
@@ -20,7 +21,9 @@ export default class ResultReview extends Component {
         </Row>
         <Row>
           <Col xs={12}>
-            <Markup content={review.highlights[0]}/>
+            <Link to={`/reviews/${review.id}`}>
+              <Markup content={review.highlights[0]}/>
+            </Link>
           </Col>
         </Row>
         <Row>

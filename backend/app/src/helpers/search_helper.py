@@ -52,11 +52,13 @@ def hydrate_models(models):
         if model.meta.index == 'businesses':
             business = Business.hydrate(model)
             business.doc_type = 'business'
+            business.id = model.meta.id
             payload.append(business.serialize())
         elif model.meta.index == 'reviews':
             review = Review.hydrate(model)
             review.highlights = list(model.meta.highlight.text)
             review.doc_type = 'review'
+            review.id = model.meta.id
             payload.append(review.serialize())
         else:
             message = 'model not found for index: {}'.format(model.meta.index)

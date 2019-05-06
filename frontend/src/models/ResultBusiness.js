@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {Link} from "react-router-dom";
 
 export default class ResultBusiness extends Component {
   render() {
@@ -11,7 +12,9 @@ export default class ResultBusiness extends Component {
       <Container>
         <Row>
           <Col xs={6}>
-            {business.name}
+            <Link to={`/businesses/${business.id}`}>
+              {business.name}
+            </Link>
           </Col>
           <Col xs={6}>
             Hours go here
