@@ -21,7 +21,7 @@ class Search extends Component {
   }
 
   handleSubmit() {
-    let query = this.state.query;
+    const query = this.state.query;
     this.getData(query);
   }
 

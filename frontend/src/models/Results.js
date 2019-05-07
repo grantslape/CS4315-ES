@@ -25,6 +25,10 @@ export default class Results extends Component {
     }
   }
 
+  componentDidMount() {
+    this.setState({ results: Results.parseResults(this.props.results) });
+  }
+
   // Hydrate the result models
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.results !== prevProps.results) {
