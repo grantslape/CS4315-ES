@@ -22,7 +22,10 @@ class Search extends Component {
 
   handleSubmit() {
     let query = this.state.query;
+    this.getData(query);
+  }
 
+  getData(query) {
     API.get(`/search?q=${query}`)
       .then(res => {
         const results = res.data;
@@ -34,7 +37,9 @@ class Search extends Component {
 
   setQueryString() {
     const queryString = require('query-string');
-    this.setState({ query: queryString.parse(this.props.location.search).q });
+    const q = queryString.parse(this.props.location.search).q;
+    this.setState({ query: q });
+    this.getData(q);
   }
 
   componentDidMount() {
