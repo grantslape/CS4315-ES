@@ -28,14 +28,23 @@ class Search extends Component {
         const results = res.data;
         console.log(results);
         this.setState({ results });
-        this.props.history.push('/search');
+        this.props.history.push({ pathname: '/search', search: `q=${query}` });
       });
+  }
+
+  setQueryString() {
+    const queryString = require('query-string');
+    this.setState({ query: queryString.parse(this.props.location.search).q });
+  }
+
+  componentDidMount() {
+    this.setQueryString();
   }
 
   render() {
     return (
       <div>
-        <NavBar onChange={this.handleChange} handleSubmit={this.handleSubmit}/>
+        <NavBar onChange={this.handleChange} handleSubmit={this.handleSubmit} query={this.state.query}/>
         <Route
           path={"/search"}
           render={

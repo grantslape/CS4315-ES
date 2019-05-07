@@ -9,7 +9,7 @@ export default class Results extends Component {
     this.state = { results: null };
   }
 
-  parseResults(results) {
+  static parseResults(results) {
     if (results) {
       return results.map((result, index) => {
         if (result.doc_type === 'business') {
@@ -28,7 +28,7 @@ export default class Results extends Component {
   // Hydrate the result models
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.results !== prevProps.results) {
-      this.setState({ results: this.parseResults(this.props.results) });
+      this.setState({ results: Results.parseResults(this.props.results) });
     }
   }
 
