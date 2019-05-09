@@ -19,11 +19,12 @@ $ docker-compose up --build -d
 ```
 
 ### Setting up the Flask API
-Next you'll need to build and start the Flask API:
+Next you'll need to build and start the Flask API.  You probably want to leave this one in the foreground of a terminal window so you can see the logs:
 
 ```bash
 $ cd backend
-$ docker-compose up --build -d
+$ cp app/env.example app/.env
+$ docker-compose up --build
 ```
 
 You can check that the API is working via the heartbeat route.  You can use cURL or Postman or whatever you prefer for making HTTP requests:
@@ -60,18 +61,23 @@ Wait for the seeding jobs to finish.  Then you can deactivate the python virtual
 $ deactivate
 ```
 
-Now you can test a simple GET on the Flask API to see an example document:
+Now you can test a simple GET on the Flask API to see an example document from the `reviews` index:
 
 ```
 GET http://localhost:45000/doc/reviews/10000
 ```
+
+You can perform a similar operation with `businesses`, `users`, `checkins` and `tips`.
 
 ### Setting up the React Frontend
 The React frontend will give you a UI to search and view data via the Flask API and the Elasticsearch cluster.  You'll need to build it first, from the project root:
 
 ```bash
 $ cd frontend
+$ cp env.example .env
 $ npm start
 ```
 
-Then navigate to [http://localhost:3000](http://localhost:3000) in your browser to view the site.  It is optimized for mobile, so you may want to turn dev tools on and change the window size to a mobile viewport.
+Then navigate to [http://localhost:3000](http://localhost:3000) in your browser to view the site. You can use the search bar to search across `reviews` and `businesses`, and you can access these resources directly via a URL containing the document type and ID, for exampleL [http://localhost:3000/reviews/1000](http://localhost:3000/reviews/1000)
+
+It is optimized for mobile, so you may want to turn dev tools on and change the window size to a mobile viewport.
