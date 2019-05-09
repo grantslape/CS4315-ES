@@ -75,6 +75,7 @@ The React frontend will give you a UI to search and view data via the Flask API 
 ```bash
 $ cd frontend
 $ cp env.example .env
+$ npm install
 $ npm start
 ```
 

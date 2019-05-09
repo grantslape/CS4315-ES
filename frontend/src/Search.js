@@ -38,8 +38,10 @@ class Search extends Component {
   setQueryString() {
     const queryString = require('query-string');
     const q = queryString.parse(this.props.location.search).q;
-    this.setState({ query: q });
-    this.getData(q);
+    if (q !== undefined) {
+      this.setState({ query: q });
+      this.getData(q);
+    }
   }
 
   componentDidMount() {
