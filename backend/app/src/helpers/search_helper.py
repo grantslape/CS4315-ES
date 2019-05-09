@@ -46,6 +46,13 @@ def generic_search(query: str, page_size: int = 10, offset: int = 0):
     return s.execute()
 
 
+def business_reviews(business_id: str, page_size: int = 10, offset: int = 0):
+    s = Search(index='reviews').query("term", business_id=business_id).sort('-useful')
+
+    s = s[offset:offset + page_size]
+    return s.execute()
+
+
 def hydrate_models(models):
     payload = []
     for model in models:
@@ -56,7 +63,8 @@ def hydrate_models(models):
             payload.append(business.serialize())
         elif model.meta.index == 'reviews':
             review = Review.hydrate(model)
-            review.highlights = list(model.meta.highlight.text)
+            if hasattr('model.meta', 'highlight'):
+                review.highlights = list(model.meta.highlight.text)
             review.doc_type = 'review'
             review.id = model.meta.id
             payload.append(review.serialize())
