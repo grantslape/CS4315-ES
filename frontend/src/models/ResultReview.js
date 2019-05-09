@@ -8,6 +8,25 @@ import { Link } from "react-router-dom";
 export default class ResultReview extends Component {
   render() {
     const review = this.props.review;
+    let highlights;
+
+    if (review.highlights) {
+      highlights = <Row>
+        <Col xs={12}>
+          <Link to={`/reviews/${review.id}`}>
+            <Markup content={review.highlights[0]}/>
+          </Link>
+        </Col>
+      </Row>;
+    } else {
+      highlights = <Row>
+        <Col xs={12}>
+          <Link to={`/reviews/${review.id}`}>
+            See Details
+          </Link>
+        </Col>
+      </Row>;
+    }
 
     return (
       <Container>
@@ -19,13 +38,7 @@ export default class ResultReview extends Component {
             {review.user_id}
           </Col>
         </Row>
-        <Row>
-          <Col xs={12}>
-            <Link to={`/reviews/${review.id}`}>
-              <Markup content={review.highlights[0]}/>
-            </Link>
-          </Col>
-        </Row>
+        {highlights}
         <Row>
           <Col xs={4}>
             S: {review.stars} C: {review.cool} J: {review.funny} U: {review.useful}

@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import API from '../helpers/API';
+import {Link} from "react-router-dom";
 
 export default class Business extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ export default class Business extends Component {
   render() {
     if (this.state.business) {
       const business = this.state.business;
+      const id = this.props.match.params.id;
 
       return (
         <Container>
@@ -40,7 +42,10 @@ export default class Business extends Component {
             </Col>
             <Col xs={6}>
               Stars: {business.stars}<br/>
-              Reviews: {business.review_count}
+              Reviews:&nbsp;
+              <Link to={`/businesses/${id}/reviews`}>
+                {business.review_count}
+              </Link>
             </Col>
           </Row>
           <Row>

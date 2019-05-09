@@ -5,6 +5,7 @@ import Results from "./models/Results";
 import Review from "./models/Review";
 import Business from "./models/Business";
 import {Route, withRouter} from "react-router-dom";
+import BusinessReviews from "./models/BusinessReviews";
 
 class Search extends Component {
   constructor(props) {
@@ -60,6 +61,7 @@ class Search extends Component {
         />
         <Route path={"/reviews/:id"} component={Review}/>
         <Route path={"/businesses/:id"} component={Business}/>
+        <Route path={"/businesses/:id/reviews"} component={BusinessReviews}/>
       </div>
     )
   }

@@ -63,7 +63,7 @@ def hydrate_models(models):
             payload.append(business.serialize())
         elif model.meta.index == 'reviews':
             review = Review.hydrate(model)
-            if hasattr('model.meta', 'highlight'):
+            if hasattr(model.meta, 'highlight'):
                 review.highlights = list(model.meta.highlight.text)
             review.doc_type = 'review'
             review.id = model.meta.id
