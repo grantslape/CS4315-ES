@@ -27,7 +27,10 @@ export default class ResultBusiness extends Component {
           </Col>
           <Col>
             Stars: {business.stars} <br/>
-            Reviews: {business.review_count}
+            Reviews:&nbsp;
+            <Link to={`/businesses/${business.id}/reviews`}>
+              {business.review_count}
+            </Link>
           </Col>
         </Row>
         <Row>

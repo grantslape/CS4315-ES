@@ -144,6 +144,7 @@ def file_iterable(path: str, name: str) -> dict:
 
 def index_documents(path: str, name: str):
     """Use the streaming bulk API to index some documents"""
+    # TODO: inject hostname
     es = Elasticsearch(hosts=[{'host': 'localhost', 'port': 49200}])
     for ok, result in streaming_bulk(
             es,
